@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Student Registration Main Menu and sub menus -->
+    <menuitem id="main_menu_registration" name="Registration" sequence="3" groups="student_registration.student_registration_group"
+              web_icon="student_registration,static/description/icon.png"/>
+
+    <menuitem id="action_menu_student_registration" name="Student Registration" sequence="0" parent="main_menu_registration"
+              action="student_registration_action"/>
+
+    <menuitem id="action_menu_students" name="Students" parent="main_menu_registration" action="action_students"
+              sequence="1"/>
+
+</odoo>

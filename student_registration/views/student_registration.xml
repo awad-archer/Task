@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_student_registration_form" model="ir.ui.view">
+        <field name="name">student.registration.form</field>
+        <field name="model">student.registration</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="reg_confirm" states="draft" type="object" string="Confirm" class="oe_highlight"/>
+                      <button name="create_invoice" string="Create Invoice"
+                               type="object" class="oe_highlight"  states="confirm"/>
+                    <button name="reg_cancel" string="Cancel" states="confirm" type="object"
+                            class="oe_highlight"/>
+                    <button name="reg_draft" string="Set to Draft" states="cancel" type="object" class="oe_highlight"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,confirm,cancel,invoiced"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_refer_invoice" string="Invoice" type="object"
+                                states="invoiced" class="oe_stat_button" icon="fa-pencil-square-o"/>
+
+                    </div>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="student_id" context="{'default_is_student': True}"/>
+                            <field name="age"/>
+                            <field name="currency_id"/>
+                        </group>
+                        <group>
+                            <field name="phone"/>
+                            <field name="date"/>
+                            <field name="amount"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_student_registration_tree">
+        <field name="name">student.registration.tree</field>
+        <field name="model">student.registration</field>
+        <field name="arch" type="xml">
+            <tree string="Student Registration">
+                <field name="name"/>
+                <field name="state" invisible="1"/>
+                <field name="student_id"/>
+                <field name="date"/>
+                <field name="age"/>
+                <field name="phone"/>
+                <field name="state" optional="show" widget="badge"
+                       decoration-success="state == 'confirm' or state == 'invoiced'"
+                       decoration-warning="state == 'cancel'" decoration-info="state == 'draft'"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_student_registration_search" model="ir.ui.view">
+        <field name="name">student.registration.Search</field>
+        <field name="model">student.registration</field>
+        <field name="arch" type="xml">
+            <search string="Search Registration">
+                <field name="name"/>
+                <field name="student_id"/>
+                <field name="phone"/>
+                <filter name="today" string="Today"
+                        domain="[('date','&gt;=', datetime.datetime.combine(context_today(), datetime.time(0,0,0))), ('date','&lt;=', datetime.datetime.combine(context_today(), datetime.time(23,59,59)))]"/>
+                <separator/>
+                <filter name="confirm" string="Confirmed" domain="[('state','=','confirm')]"/>
+                <group expand="0" string="Group By...">
+                    <filter string="Student's Registration" name="std_groupby" domain="[]"
+                            context="{'group_by':'student_id'}"/>
+                    <filter string="Date" name="date_groupby" domain="[]" context="{'group_by':'date'}"/>
+                    <filter string="Status" name="state_groupby" domain="[]" context="{'group_by':'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_student_registration_calendar" model="ir.ui.view">
+        <field name="name">student.registration.calendar</field>
+        <field name="model">student.registration</field>
+        <field name="type">calendar</field>
+        <field name="arch" type="xml">
+            <calendar string="Registration" color="state" event_limit="5" date_start="date" quick_add="False">
+                <field name="student_id"/>
+                <field name="state" filters="1"/>
+                <field name="phone"/>
+                <field name="age"/>
+
+            </calendar>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="student_registration_action">
+        <field name="name">Student Registration</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">student.registration</field>
+        <field name="view_mode">tree,form,calendar</field>
+        <field name="view_id" ref="view_student_registration_tree"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No Record Found
+            </p>
+            <p>
+                Click to add a Student Registration.
+            </p>
+        </field>
+    </record>
+
+</odoo>
